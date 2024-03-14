@@ -12,7 +12,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        return Note::query()->paginate(6);
+        return Note::query()->orderBy('created_at', 'desc')->paginate(8);
     }
 
     /**
@@ -20,7 +20,13 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'note_title' => 'string|required',
+            'note' => 'string|min:3'
+        ]);
+        $data['user_id'] = 1;
+
+        return Note::create($data);
     }
 
     /**
@@ -43,9 +49,17 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Note $note)
     {
-        //
+        $data = $request->validate([
+            'note_title' => 'required',
+            'note' => 'required|min:5'
+        ]);
+        // $data['user_id'] = $request->user()->id;
+
+        $note->update($data);
+
+        return Note::find($note->id);
     }
 
     /**
@@ -56,5 +70,8 @@ class NoteController extends Controller
         $note = Note::find($id);
 
         $note->delete();
+
+        // return redirect('/notes');
+        // return to_route('note.index');
     }
 }
