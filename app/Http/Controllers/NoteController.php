@@ -55,11 +55,8 @@ class NoteController extends Controller
             'note_title' => 'required',
             'note' => 'required|min:5'
         ]);
-        // $data['user_id'] = $request->user()->id;
 
         $note->update($data);
-
-        return Note::find($note->id);
     }
 
     /**
@@ -71,6 +68,7 @@ class NoteController extends Controller
 
         $note->delete();
 
+        return response('', 204);
         // return redirect('/notes');
         // return to_route('note.index');
     }
